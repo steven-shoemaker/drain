@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Check from "$lib/craft/Check.svelte";
   import type { RefinedTask } from "$lib/types";
 
   let {
@@ -28,14 +29,30 @@
       bind:value={draft.title}
       placeholder="imperative title"
     />
-    <button class="ghost" type="button" onclick={onremove}>remove</button>
+    <button class="craft-btn craft-btn--ghost" type="button" onclick={onremove}>remove</button>
   </header>
   <p class="branch">{draft.suggestedBranch}</p>
 
   <label>
     acceptance criteria
+    {#if draft.acceptanceCriteria.length}
+      <ul class="checks">
+        {#each draft.acceptanceCriteria as c, i}
+          <li>
+            <Check label={c} />
+            <input
+              value={c}
+              oninput={(e) => {
+                draft.acceptanceCriteria[i] = (e.currentTarget as HTMLInputElement).value;
+                draft.acceptanceCriteria = draft.acceptanceCriteria;
+              }}
+            />
+          </li>
+        {/each}
+      </ul>
+    {/if}
     <textarea
-      rows="4"
+      rows="3"
       value={listText(draft.acceptanceCriteria)}
       oninput={(e) =>
         (draft.acceptanceCriteria = parseList((e.currentTarget as HTMLTextAreaElement).value))}
@@ -97,6 +114,28 @@
     letter-spacing: -0.01em;
     color: var(--muted);
   }
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .checks input {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 400;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--craft-fg);
+  }
   textarea,
   input:not(.title) {
     font-size: 13px;
@@ -109,5 +148,10 @@
     padding: 8px 10px;
     font-family: inherit;
     resize: vertical;
+  }
+  .checks input {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
   }
 </style>

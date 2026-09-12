@@ -1,5 +1,7 @@
 <script lang="ts">
   import QueueRow from "$lib/components/QueueRow.svelte";
+  import HeatMap from "$lib/craft/HeatMap.svelte";
+  import Spread from "$lib/craft/Spread.svelte";
   import {
     pauseQueue,
     reorderTasks,
@@ -9,7 +11,7 @@
   } from "$lib/api";
   import { store } from "$lib/stores.svelte";
   import { goto } from "$app/navigation";
-  import type { Task } from "$lib/types";
+  import { STATUS_HEAT, type Task } from "$lib/types";
 
   let err = $state<string | null>(null);
   let filter = $state<"all" | "ready" | "waiting" | "done" | "failed">("all");
@@ -100,6 +102,13 @@
     void goto("/run");
   }
 
+  const heat = $derived(store.tasks.map((t) => STATUS_HEAT[t.status]));
+  const spread = $derived(
+    store.tasks
+      .filter((t) => t.status === "ready" || t.status === "running")
+      .map((t) => ({ href: "/run", label: t.title })),
+  );
+
   const filters: { id: typeof filter; label: string }[] = [
     { id: "all", label: "all" },
     { id: "ready", label: "ready" },
@@ -119,9 +128,9 @@
 
   <div class="toolbar">
     {#if store.paused}
-      <button class="primary" type="button" onclick={() => void start()}>start</button>
+      <button class="craft-btn craft-btn--primary" type="button" onclick={() => void start()}>start</button>
     {:else}
-      <button class="ghost" type="button" onclick={() => void pause()}>pause</button>
+      <button class="craft-btn craft-btn--ghost" type="button" onclick={() => void pause()}>pause</button>
     {/if}
     <span class="hint">
       {#if store.running}
@@ -134,11 +143,14 @@
     </span>
   </div>
 
+  <HeatMap weeks={18} levels={heat} />
+  <Spread items={spread} />
+
   <div class="filters" role="tablist">
     {#each filters as f}
       <button
         type="button"
-        class:on={filter === f.id}
+        class="craft-btn {filter === f.id ? 'craft-btn--primary' : 'craft-btn--ghost'}"
         onclick={() => (filter = f.id)}
       >
         {f.label}
@@ -149,7 +161,7 @@
 
   <div class="stack">
     {#if shown.length === 0}
-      <p class="empty">
+      <p class="craft-empty">
         {store.tasks.length === 0
           ? "queue is empty. refine something in inbox, then enqueue."
           : "nothing in this filter."}
@@ -168,8 +180,8 @@
         {#if task.status === "failed"}
           <div class="failbar">
             <span>{task.failNote ?? "Failed"}</span>
-            <button class="ghost" type="button" onclick={() => void retry(task.id)}>retry</button>
-            <button class="ghost" type="button" onclick={() => void skip(task.id)}>skip / next</button>
+            <button class="craft-btn craft-btn--ghost" type="button" onclick={() => void retry(task.id)}>retry</button>
+            <button class="craft-btn craft-btn--ghost" type="button" onclick={() => void skip(task.id)}>skip / next</button>
           </div>
         {/if}
       </div>
@@ -185,29 +197,8 @@
   .filters {
     display: flex;
     gap: 6px;
-    margin: -4px 0 16px;
+    margin: 8px 0 16px;
     flex-wrap: wrap;
-  }
-  .filters button {
-    height: 26px;
-    padding: 0 10px;
-    border-radius: 999px;
-    border: 0;
-    background: var(--bg);
-    box-shadow: var(--shadow-border);
-    font-size: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-  }
-  .filters button.on {
-    background: var(--ink);
-    color: #fff;
-    box-shadow: none;
-  }
-  .filters button.on em {
-    color: #fff;
   }
   em {
     font-style: normal;

@@ -93,6 +93,17 @@ export type RefineLogEvent = {
   line: string;
 };
 
+export const STATUS_HEAT: Record<Status, 0 | 1 | 2 | 3 | 4> = {
+  idea: 1,
+  refining: 2,
+  ready: 2,
+  running: 3,
+  awaiting_pr: 3,
+  awaiting_approve: 3,
+  done: 4,
+  failed: 0,
+};
+
 export const STATUS_LABEL: Record<Status, string> = {
   idea: "idea",
   refining: "refining",

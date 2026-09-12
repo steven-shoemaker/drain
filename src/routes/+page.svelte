@@ -1,9 +1,11 @@
 <script lang="ts">
   import DraftCard from "$lib/components/DraftCard.svelte";
-  import PixelLoader from "$lib/components/PixelLoader.svelte";
   import PromptBar from "$lib/components/PromptBar.svelte";
   import RefusalCard from "$lib/components/RefusalCard.svelte";
   import ThinkingTrace from "$lib/components/ThinkingTrace.svelte";
+  import Fan from "$lib/craft/Fan.svelte";
+  import HeatMap from "$lib/craft/HeatMap.svelte";
+  import Recommend from "$lib/craft/Recommend.svelte";
   import {
     createIdea,
     enqueueIdea,
@@ -13,21 +15,12 @@
   } from "$lib/api";
   import { store } from "$lib/stores.svelte";
   import type { Idea, RefinedTask } from "$lib/types";
-  import { onDestroy } from "svelte";
 
   let body = $state("");
   let busyId = $state<number | null>(null);
   let enqueueing = $state<number | null>(null);
   let localError = $state<string | null>(null);
   let answers: Record<number, string> = $state({});
-  let now = $state(Date.now());
-  const tick = setInterval(() => (now = Date.now()), 100);
-
-  onDestroy(() => clearInterval(tick));
-
-  const elapsed = $derived(
-    store.refineStartedAt ? (now - store.refineStartedAt) / 1000 : 0,
-  );
 
   async function capture() {
     localError = null;
@@ -128,7 +121,28 @@
     />
 
     {#if store.ideas.length === 0}
-      <p class="empty">nothing captured yet. try two jobs in one thought — refine will split them.</p>
+      <p class="craft-empty">nothing captured yet. try two jobs in one thought — refine will split them.</p>
+      <Recommend
+        prompt="how should this start?"
+        options={[
+          {
+            key: "refine",
+            body: "dump a messy thought, then refine splits it into checkable agent tasks.",
+            short: "refine now",
+            signal: 3,
+            label: "strong default",
+            cta: "start in the box",
+          },
+          {
+            key: "capture",
+            body: "capture only. refine later when you know which pile it belongs in.",
+            short: "capture only",
+            signal: 1,
+            label: "park it",
+            cta: "just capture",
+          },
+        ]}
+      />
     {/if}
 
     {#each store.ideas as idea (idea.id)}
@@ -137,7 +151,7 @@
 
         {#if store.refiningId === idea.id || idea.status === "refining" || busyId === idea.id}
           <div class="working">
-            <PixelLoader {elapsed} label="refining" />
+            <HeatMap weeks={12} />
             <ThinkingTrace steps={store.refineSteps} />
           </div>
         {:else if isRefusal(idea) && idea.error}
@@ -153,7 +167,7 @@
 
         <div class="toolbar">
           <button
-            class="ghost"
+            class="craft-btn craft-btn--ghost"
             type="button"
             disabled={busyId === idea.id || idea.status === "refining"}
             onclick={() => void refine(idea)}
@@ -162,7 +176,7 @@
           </button>
           {#if idea.drafts.length > 0}
             <button
-              class="primary"
+              class="craft-btn craft-btn--primary"
               type="button"
               disabled={enqueueing === idea.id}
               onclick={() => void enqueue(idea)}
@@ -173,6 +187,7 @@
         </div>
 
         {#if idea.drafts.length > 0}
+          <Fan items={idea.drafts.map((d) => d.title)} />
           <div class="drafts">
             {#each idea.drafts as draft, i}
               <DraftCard
@@ -193,7 +208,7 @@
 <style>
   .idea {
     padding: 22px 0 8px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--craft-border);
   }
   .body {
     margin: 0 0 12px;

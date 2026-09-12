@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Check from "$lib/craft/Check.svelte";
+  import Hold from "$lib/craft/Hold.svelte";
   import type { Task } from "$lib/types";
 
   let {
@@ -25,13 +27,16 @@
   {/if}
   <ul>
     {#each task.acceptanceCriteria as c}
-      <li>{c}</li>
+      <li>
+        <Check label={c} />
+        <span>{c}</span>
+      </li>
     {/each}
   </ul>
   <div class="row">
     <input placeholder="reject note" bind:value={note} />
-    <button class="ghost" type="button" onclick={onreject}>reject</button>
-    <button class="primary" type="button" onclick={onapprove}>approve</button>
+    <Hold label="hold to reject" doneLabel="rejected" oncommit={onreject} />
+    <button class="craft-btn craft-btn--primary" type="button" onclick={onapprove}>approve</button>
   </div>
 </section>
 
@@ -85,9 +90,18 @@
   }
   ul {
     margin: 4px 0 6px;
-    padding-left: 18px;
-    color: var(--muted);
+    padding: 0;
+    list-style: none;
+    color: var(--craft-muted);
     font-size: 12.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .row {
     display: flex;

@@ -27,8 +27,8 @@
 
   <nav>
     {#each items as item}
-      <a href={item.href} class:on={active(item.href)}>
-        <span>{item.label}</span>
+      <a href={item.href} class="craft-row" class:on={active(item.href)}>
+        <span class="craft-row__title">{item.label}</span>
         {#if item.key === "queue" && store.readyCount > 0}
           <em>{store.readyCount}</em>
         {/if}
@@ -95,32 +95,16 @@
   nav {
     display: flex;
     flex-direction: column;
-    gap: 2px;
     flex: 1;
   }
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 32px;
-    padding: 0 10px;
-    border-radius: 8px;
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    transition: background-color 140ms ease;
+  .craft-row {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
-  @media (hover: hover) {
-    a:hover {
-      background: color-mix(in srgb, var(--ink) 4%, transparent);
-    }
-  }
-  a.on {
-    background: var(--bg);
+  .craft-row.on {
+    background: var(--craft-bg);
     box-shadow: var(--shadow-border);
   }
-  em {
+  .pulse {
     font-style: normal;
     font-family: var(--font-sf-mono);
     font-size: 10px;

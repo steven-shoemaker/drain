@@ -2,6 +2,8 @@
   import ApprovalCard from "$lib/components/ApprovalCard.svelte";
   import StatusChip from "$lib/components/StatusChip.svelte";
   import ToolChip from "$lib/components/ToolChip.svelte";
+  import Check from "$lib/craft/Check.svelte";
+  import Hold from "$lib/craft/Hold.svelte";
   import { approveTask, cancelRun, openUrl, rejectTask } from "$lib/api";
   import { store } from "$lib/stores.svelte";
   import { onMount } from "svelte";
@@ -111,14 +113,17 @@
   {:else if task}
     <ul class="criteria">
       {#each task.acceptanceCriteria as c}
-        <li>{c}</li>
+        <li>
+          <Check label={c} />
+          <span>{c}</span>
+        </li>
       {/each}
     </ul>
   {/if}
 
   <div class="toolbar">
     {#if task?.status === "running"}
-      <button class="danger" type="button" onclick={() => void cancel()}>cancel</button>
+      <Hold label="hold to cancel" doneLabel="cancelled" oncommit={() => void cancel()} />
     {/if}
     {#if task?.status === "failed"}
       <span class="err" style="margin:0">{task.failNote}</span>
@@ -148,10 +153,19 @@
   }
   .criteria {
     margin: 0 0 10px;
-    padding-left: 18px;
-    color: var(--muted);
+    padding: 0;
+    list-style: none;
+    color: var(--craft-muted);
     font-size: 12.5px;
     max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .criteria li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .log {
     flex: 1;

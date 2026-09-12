@@ -1,0 +1,2835 @@
+/* Extracted craft components from personal-site-shoemaker */
+
+.craft-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);
+  flex-shrink: 0;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  transition: filter 480ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.craft-header__who:hover .craft-avatar,
+.craft-header__who:focus-within .craft-avatar {
+  filter: grayscale(0) contrast(1);
+}
+
+.craft-name {
+  font-family: var(--font-sf-rounded), var(--font-sf-text), -apple-system, sans-serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--craft-fg);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.craft-role {
+  margin: 6px 0 0;
+  font-size: 1rem;
+  color: var(--craft-muted);
+  letter-spacing: -0.01em;
+}
+
+.craft-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-bottom: 20px;
+  overflow: visible;
+}
+
+.craft-bio p {
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--craft-fg) 78%, transparent);
+  text-wrap: pretty;
+}
+
+.craft-text-link,
+.craft-inline-link {
+  color: var(--craft-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--craft-fg) 28%, transparent);
+  transition: text-decoration-color 180ms ease;
+}
+
+.craft-text-link:hover,
+.craft-inline-link:hover {
+  text-decoration-color: var(--craft-fg);
+}
+
+.craft-peek {
+  --peek-open-dur: 500ms;
+  --peek-open-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  z-index: 1;
+  cursor: default;
+  overflow: visible;
+}
+
+.craft-peek:hover,
+.craft-peek:focus-visible {
+  z-index: 8;
+}
+
+.craft-peek__mark {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+.craft-peek__stack {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 6;
+  width: 246px;
+  height: 229px;
+  pointer-events: none;
+  opacity: 0;
+  translate: -50% 8px;
+  transition:
+    opacity var(--stack-close-dur) var(--stack-close-ease),
+    translate var(--stack-close-dur) var(--stack-close-ease);
+}
+
+.craft-peek:focus-visible .craft-peek__stack {
+  opacity: 1;
+  translate: -50% 0;
+  transition:
+    opacity var(--peek-open-dur) var(--peek-open-ease),
+    translate var(--peek-open-dur) var(--peek-open-ease);
+}
+
+.craft-peek__frame {
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  z-index: 0;
+  display: flex;
+  box-sizing: border-box;
+  width: 134px;
+  height: 164px;
+  padding: 4px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    0 4px 42px rgba(0, 0, 0, 0.06);
+  translate: calc(-50% + var(--cx, 0px)) var(--cy, 0px);
+  rotate: var(--rot, 0deg);
+  scale: 1;
+  transform-origin: 50% 110%;
+  transition:
+    translate var(--stack-close-dur) var(--stack-close-ease),
+    rotate var(--stack-close-dur) var(--stack-close-ease),
+    scale var(--stack-scale-dur) var(--stack-scale-ease);
+}
+
+.craft-peek__frame:nth-child(2) {
+  z-index: 1;
+}
+
+.craft-peek:focus-visible .craft-peek__frame {
+  translate:
+    calc(-50% + var(--cx, 0px) + var(--dx, 0px))
+    calc(var(--cy, 0px) + var(--dy, 0px) * var(--stack-spread));
+  rotate: calc(var(--rot, 0deg) + var(--drot, 0deg) * var(--stack-rotation));
+  transition:
+    translate var(--peek-open-dur) var(--peek-open-ease),
+    rotate var(--peek-open-dur) var(--peek-open-ease),
+    scale var(--stack-scale-dur) var(--stack-scale-ease);
+}
+
+@media (hover: hover) {
+  .craft-peek:hover .craft-peek__stack {
+    opacity: 1;
+    translate: -50% 0;
+    transition:
+      opacity var(--peek-open-dur) var(--peek-open-ease),
+      translate var(--peek-open-dur) var(--peek-open-ease);
+  }
+
+  .craft-peek:hover .craft-peek__frame {
+    translate:
+      calc(-50% + var(--cx, 0px) + var(--dx, 0px))
+      calc(var(--cy, 0px) + var(--dy, 0px) * var(--stack-spread));
+    rotate: calc(var(--rot, 0deg) + var(--drot, 0deg) * var(--stack-rotation));
+    transition:
+      translate var(--peek-open-dur) var(--peek-open-ease),
+      rotate var(--peek-open-dur) var(--peek-open-ease),
+      scale var(--stack-scale-dur) var(--stack-scale-ease);
+  }
+}
+
+.craft-peek__well {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: var(--craft-surface);
+  overflow: hidden;
+}
+
+.craft-peek__well img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  transition: filter var(--stack-scale-dur) var(--stack-scale-ease);
+}
+
+.craft-peek:focus-visible .craft-peek__well img {
+  filter: grayscale(0) contrast(1);
+}
+
+@media (hover: hover) {
+  .craft-peek:hover .craft-peek__well img {
+    filter: grayscale(0) contrast(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-peek__stack,
+  .craft-peek:hover .craft-peek__stack,
+  .craft-peek:focus-visible .craft-peek__stack {
+    translate: -50% 0;
+    transition: opacity 120ms ease;
+  }
+
+  .craft-peek__frame,
+  .craft-peek:hover .craft-peek__frame,
+  .craft-peek:focus-visible .craft-peek__frame {
+    transition: none;
+    translate:
+      calc(-50% + var(--cx, 0px) + var(--dx, 0px))
+      calc(var(--cy, 0px) + var(--dy, 0px) * var(--stack-spread));
+    rotate: calc(var(--rot, 0deg) + var(--drot, 0deg) * var(--stack-rotation));
+    scale: 1;
+  }
+
+  .craft-peek__well img {
+    transition: none;
+  }
+}
+
+.craft-inline-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-weight: 600;
+}
+
+.craft-inline-link__icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  translate: 0 2px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.craft-inline-link__icon--deel,
+.craft-inline-link__icon--peoplesets {
+  display: inline-block;
+}
+
+.craft-section {
+  margin-bottom: 56px;
+}
+
+.craft-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 22px;
+  font-family: var(--font-sf-rounded), var(--font-sf-text), -apple-system, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: -0.02em;
+  color: var(--craft-fg);
+  line-height: 1.2;
+  text-transform: lowercase;
+  text-wrap: balance;
+}
+
+.craft-kicker__n {
+  flex-shrink: 0;
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--craft-muted);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.craft-section-title {
+  margin: 0 0 16px;
+  font-family: var(--font-sf-rounded), var(--font-sf-text), -apple-system, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--craft-fg);
+}
+
+.craft-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.craft-section-head .craft-kicker,
+.craft-section-head .craft-section-title {
+  margin-bottom: 0;
+}
+
+.craft-section-more {
+  font-size: 0.84rem;
+  color: var(--craft-muted);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.craft-section-more:hover {
+  color: var(--craft-fg);
+}
+
+.craft-contrib {
+  border: none;
+  border-radius: 18px;
+  background: var(--craft-surface);
+  padding: 18px 18px 14px;
+  overflow: visible;
+  max-width: 100%;
+}
+
+.craft-contrib__scroll {
+  overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  scrollbar-width: none;
+}
+
+.craft-contrib__scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.craft-contrib__months {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: 16px;
+  margin-bottom: 6px;
+  overflow: visible;
+}
+
+.craft-contrib__month {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-sf-text), -apple-system, sans-serif;
+  font-size: 0.68rem;
+  color: var(--craft-muted);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.craft-contrib__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--contrib-weeks, 53), minmax(0, 1fr));
+  gap: clamp(1px, 0.35vw, 3px);
+  width: 100%;
+  max-width: 100%;
+}
+
+.craft-contrib__week {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.35vw, 3px);
+  min-width: 0;
+  position: relative;
+}
+
+.craft-contrib__week:hover,
+.craft-contrib__week:focus-within {
+  z-index: 2;
+}
+
+.craft-contrib__day {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 3px;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.craft-contrib__grid .craft-contrib__day {
+  position: relative;
+  transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.craft-contrib__grid .craft-contrib__day:hover,
+.craft-contrib__grid .craft-contrib__day:focus-visible {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.craft-contrib__grid .craft-contrib__day[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  z-index: 3;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: var(--craft-fg);
+  color: #fff;
+  font-size: 0.68rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%) translateY(3px);
+  transition:
+    opacity 140ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 140ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.craft-contrib__grid .craft-contrib__day:hover::after,
+.craft-contrib__grid .craft-contrib__day:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.craft-contrib__week:nth-last-child(-n + 5) .craft-contrib__day[data-tip]::after {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(3px);
+}
+
+.craft-contrib__week:nth-last-child(-n + 5) .craft-contrib__day:hover::after,
+.craft-contrib__week:nth-last-child(-n + 5) .craft-contrib__day:focus-visible::after {
+  transform: translateX(0) translateY(0);
+}
+
+.craft-contrib__legend .craft-contrib__day {
+  width: 10px;
+  height: 10px;
+  aspect-ratio: auto;
+  flex-shrink: 0;
+}
+
+.craft-contrib__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.craft-contrib__total,
+.craft-contrib__legend {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--craft-muted);
+}
+
+.craft-contrib__legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.craft-experience {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.craft-experience__item {
+  padding: 22px 0;
+  border-top: 1px solid var(--craft-border);
+}
+
+.craft-experience__item:last-child {
+  border-bottom: 1px solid var(--craft-border);
+}
+
+.craft-experience__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.craft-experience__title {
+  margin: 0;
+  font-family: var(--font-sf-rounded), var(--font-sf-text), -apple-system, sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--craft-fg);
+  line-height: 1.3;
+}
+
+.craft-experience__period {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.92rem;
+  color: var(--craft-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.craft-experience__at {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: var(--craft-fg);
+  text-decoration: none;
+  transition: opacity 160ms ease;
+}
+
+.craft-experience__at:hover {
+  opacity: 0.65;
+}
+
+.craft-experience__stack {
+  margin: 0;
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--craft-muted);
+}
+
+.craft-building__desc {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--craft-muted);
+}
+
+.craft-building .craft-experience__at {
+  margin-bottom: 8px;
+}
+
+.craft-building-avatars {
+  --avatar-lift: -5px;
+  --avatar-dur: 320ms;
+  --avatar-scale: 1.06;
+  --avatar-falloff: 0.42;
+  --avatar-ease-in: cubic-bezier(0.22, 1, 0.36, 1);
+  --avatar-ease-out: cubic-bezier(0.34, 3.85, 0.64, 1);
+
+  display: flex;
+  align-items: center;
+  margin: 14px 0 2px;
+  padding-left: 2px;
+}
+
+.craft-building-avatar {
+  --shift: 0px;
+  --scale-active: 1;
+
+  position: relative;
+  display: inline-flex;
+  margin-left: -10px;
+  transform-origin: center;
+  transform: translateY(var(--shift)) scale(var(--scale-active));
+  transition: transform var(--avatar-dur) var(--avatar-ease-in);
+  will-change: transform;
+  text-decoration: none;
+  color: var(--craft-fg);
+  z-index: 1;
+}
+
+.craft-building-avatar:first-child {
+  margin-left: 0;
+}
+
+.craft-building-avatar:hover,
+.craft-building-avatar:focus-visible {
+  z-index: 3;
+}
+
+.craft-building-avatar:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.craft-building-avatar__face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1.5px solid #fff;
+  background: #f4f4f5;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--craft-fg) 8%, transparent);
+  overflow: hidden;
+}
+
+.craft-building-avatar__face img,
+.craft-building-avatar__face svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.craft-building-avatar__face span {
+  display: flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-building-avatar {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+.craft-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.craft-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  margin: 0 -8px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 160ms ease;
+}
+
+.craft-row:hover {
+  background: color-mix(in srgb, var(--craft-fg) 4%, transparent);
+}
+
+.craft-row:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.craft-row__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--craft-border);
+  background: #fff;
+  color: color-mix(in srgb, var(--craft-fg) 55%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.craft-row__main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  min-width: 0;
+}
+
+.craft-row__title {
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--craft-fg);
+}
+
+.craft-row__sub {
+  width: 100%;
+  font-size: 0.82rem;
+  color: var(--craft-muted);
+  letter-spacing: -0.01em;
+}
+
+.craft-row__meta {
+  font-size: 0.82rem;
+  color: var(--craft-muted);
+  white-space: nowrap;
+  justify-self: end;
+}
+
+.craft-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--craft-badge-bg);
+  color: var(--craft-badge-fg);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+.craft-badge--fan {
+  padding: 1px 6px;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.craft-empty {
+  margin: 0;
+  padding: 18px 16px;
+  border: 1px dashed var(--craft-border);
+  border-radius: 16px;
+  background: #fff;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--craft-muted);
+}
+
+.craft-row:active {
+  transform: scale(0.99);
+}
+
+.craft-activity {
+  margin-bottom: 48px;
+  overflow: visible;
+  padding-bottom: 28px;
+}
+
+.craft-spread {
+  --spread-card-w: min(130px, 22cqi);
+  --spread-slots: 7;
+  --spread-arc: 10deg;
+  --spread-drop: 12px;
+  /* Gooey-plus fan, slowed: 850ms spring out, 600ms smooth-out home. */
+  --spread-in-dur: 950ms;
+  --spread-in-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spread-out-dur: 700ms;
+  --spread-out-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spread-press-dur: 160ms;
+  --spread-press-ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 36px 0 48px;
+  overflow: visible;
+  width: 100%;
+  container-type: inline-size;
+}
+
+.craft-spread__row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: visible;
+  width: 100%;
+}
+
+.craft-spread__hit {
+  --spread-t: 0.5;
+  --spread-z: 1;
+  --spread-y: 0px;
+
+  position: relative;
+  z-index: var(--spread-z);
+  width: var(--spread-card-w);
+  aspect-ratio: 3 / 4.2;
+  display: block;
+  flex: 0 0 auto;
+  text-decoration: none;
+  color: inherit;
+  transform-origin: 50% 118%;
+  rotate: calc(var(--spread-arc) * (2 * var(--spread-t) - 1));
+  translate: 0 calc(
+    var(--spread-drop) * (2 * var(--spread-t) - 1) * (2 * var(--spread-t) - 1) +
+      var(--spread-y)
+  );
+}
+
+.craft-spread__hit + .craft-spread__hit {
+  margin-inline-start: calc(
+    (100cqi - var(--spread-slots) * var(--spread-card-w)) / (var(--spread-slots) - 1)
+  );
+}
+
+.craft-spread__hit:not(:last-child) {
+  pointer-events: none;
+}
+
+.craft-spread__hit:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: max(12px, calc((100cqi - var(--spread-card-w)) / (var(--spread-slots) - 1)));
+  pointer-events: auto;
+}
+
+.craft-spread__hit:focus-visible,
+.craft-spread__hit:active {
+  z-index: 8;
+}
+
+.craft-spread__hit:focus-visible {
+  outline: none;
+}
+
+.craft-spread__face {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid #fff;
+  background: #fff;
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.04),
+    0 10px 28px rgba(17, 17, 17, 0.06),
+    0 28px 56px rgba(17, 17, 17, 0.05);
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  align-content: center;
+  text-align: center;
+  font-size: 0.68rem;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  color: var(--craft-fg);
+  text-wrap: pretty;
+  transform-origin: 50% 100%;
+  translate: 0 0;
+  scale: 1;
+  transition:
+    translate var(--spread-out-dur) var(--spread-out-ease),
+    scale var(--spread-out-dur) var(--spread-out-ease),
+    box-shadow var(--spread-out-dur) var(--spread-out-ease);
+  transition-delay: 0s;
+}
+
+.craft-spread__hit:focus-visible .craft-spread__face {
+  translate: 0 -22px;
+  scale: var(--stack-scale);
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.05),
+    0 18px 40px rgba(17, 17, 17, 0.1),
+    0 36px 64px rgba(17, 17, 17, 0.06);
+  transition:
+    translate var(--spread-in-dur) var(--spread-in-ease),
+    scale var(--spread-in-dur) var(--spread-in-ease),
+    box-shadow var(--spread-in-dur) var(--spread-in-ease);
+  transition-delay: 0s;
+}
+
+@media (hover: hover) {
+  .craft-spread__hit:hover {
+    z-index: 8;
+  }
+
+  .craft-spread__hit:hover .craft-spread__face {
+    translate: 0 -22px;
+    scale: var(--stack-scale);
+    box-shadow:
+      0 1px 1px rgba(17, 17, 17, 0.05),
+      0 18px 40px rgba(17, 17, 17, 0.1),
+      0 36px 64px rgba(17, 17, 17, 0.06);
+    transition:
+      translate var(--spread-in-dur) var(--spread-in-ease),
+      scale var(--spread-in-dur) var(--spread-in-ease),
+      box-shadow var(--spread-in-dur) var(--spread-in-ease);
+    transition-delay: 0s;
+  }
+}
+
+.craft-spread__hit:active .craft-spread__face {
+  translate: 0 -12px;
+  scale: 0.96;
+  transition:
+    translate var(--spread-press-dur) var(--spread-press-ease),
+    scale var(--spread-press-dur) var(--spread-press-ease),
+    box-shadow var(--spread-press-dur) var(--spread-press-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-spread__hit {
+    rotate: 0deg;
+    translate: 0 0;
+  }
+
+  .craft-spread__face {
+    transition: none;
+  }
+
+  .craft-spread__hit:hover .craft-spread__face,
+  .craft-spread__hit:focus-visible .craft-spread__face,
+  .craft-spread__hit:active .craft-spread__face {
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+.craft-fan {
+  --fan-spread: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0;
+  min-height: 220px;
+  padding: 36px 40px 72px;
+  overflow: visible;
+  width: 100%;
+  max-width: 100%;
+}
+
+.craft-fan[data-spread='always'] {
+  --fan-spread: 1;
+}
+
+.craft-fan:focus-within {
+  --fan-spread: 1;
+}
+
+@media (hover: hover) {
+  .craft-fan[data-spread='hover']:hover {
+    --fan-spread: 1;
+  }
+}
+
+.craft-fan__item {
+  --fan-rotate: calc(
+    var(--fan-rot-rest) + (var(--fan-rot-open) - var(--fan-rot-rest)) * var(--fan-spread)
+  );
+  --fan-y: calc(var(--fan-y-rest) + (var(--fan-y-open) - var(--fan-y-rest)) * var(--fan-spread));
+
+  width: min(112px, 15vw);
+  aspect-ratio: 3 / 4.2;
+  margin-inline-start: calc(
+    var(--fan-gap-rest) + (var(--fan-gap-open) - var(--fan-gap-rest)) * var(--fan-spread)
+  );
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #fff;
+  background: #fff;
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.04),
+    0 10px 28px rgba(17, 17, 17, 0.06),
+    0 28px 56px rgba(17, 17, 17, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: -0.02em;
+  color: var(--craft-muted);
+  transform-origin: 50% 120%;
+  translate: 0 var(--fan-y);
+  rotate: var(--fan-rotate);
+  scale: 1;
+  transition:
+    translate var(--stack-close-dur) var(--stack-close-ease),
+    rotate var(--stack-close-dur) var(--stack-close-ease),
+    margin-inline-start var(--stack-close-dur) var(--stack-close-ease),
+    scale var(--stack-scale-dur) var(--stack-scale-ease),
+    box-shadow 280ms ease;
+  animation: craft-fan-in 520ms var(--spring) both;
+  animation-delay: var(--fan-delay, 0ms);
+}
+
+@keyframes craft-fan-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(var(--fan-y, 0px) + 16px);
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    translate: 0 var(--fan-y, 0);
+    scale: 1;
+  }
+}
+
+.craft-fan__item:first-child {
+  margin-inline-start: 0;
+}
+
+@media (hover: hover) {
+  .craft-fan:hover .craft-fan__item,
+  .craft-fan:focus-within .craft-fan__item {
+    transition:
+      translate var(--stack-open-dur) var(--stack-open-ease),
+      rotate var(--stack-open-dur) var(--stack-open-ease),
+      margin-inline-start var(--stack-open-dur) var(--stack-open-ease),
+      scale var(--stack-scale-dur) var(--stack-scale-ease),
+      box-shadow 280ms ease;
+  }
+}
+
+.craft-fan__item:focus-visible {
+  z-index: 30;
+  translate: 0 calc(var(--fan-y) - 18px);
+  scale: var(--stack-scale);
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.05),
+    0 18px 40px rgba(17, 17, 17, 0.1),
+    0 36px 64px rgba(17, 17, 17, 0.06);
+  outline: none;
+}
+
+@media (hover: hover) {
+  .craft-fan__item:hover {
+    z-index: 30;
+    translate: 0 calc(var(--fan-y) - 18px);
+    scale: var(--stack-scale);
+    box-shadow:
+      0 1px 1px rgba(17, 17, 17, 0.05),
+      0 18px 40px rgba(17, 17, 17, 0.1),
+      0 36px 64px rgba(17, 17, 17, 0.06);
+    outline: none;
+  }
+}
+
+.craft-fan__item:active {
+  translate: 0 calc(var(--fan-y) - 10px);
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-fan__item {
+    animation: none;
+    transition: none;
+  }
+}
+
+.craft-mono {
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.craft-cta {
+  margin: 0 0 40px;
+  padding: 18px 18px 14px;
+  border-radius: 18px;
+  background: var(--craft-surface);
+}
+
+.craft-cta__line {
+  margin: 0 0 18px;
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--craft-fg) 75%, transparent);
+}
+
+.craft-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.craft-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 100ms ease;
+}
+
+.craft-btn:active {
+  transform: scale(0.96);
+}
+
+.craft-btn--primary {
+  background: var(--craft-fg);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.14),
+    0 0 0 1px oklch(0 0 0 / 0.12),
+    0 1px 2px oklch(0 0 0 / 0.1);
+}
+
+.craft-btn--primary:hover {
+  background: #000;
+}
+
+.craft-btn--ghost {
+  background: var(--craft-bg);
+  color: var(--craft-fg);
+  box-shadow: var(--shadow-border);
+}
+
+.craft-btn--ghost:hover,
+.craft-btn--ghost[aria-expanded='true'] {
+  background: var(--craft-surface);
+}
+
+.craft-btn--done {
+  background: var(--craft-heat-3);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.14),
+    0 0 0 1px color-mix(in srgb, var(--craft-heat-3) 70%, #000),
+    0 1px 2px oklch(0 0 0 / 0.1);
+}
+
+.craft-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.craft-code {
+  display: inline;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: var(--craft-surface);
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--craft-fg);
+}
+
+.craft-meter {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.craft-meter__bar {
+  width: 4px;
+  height: 10px;
+  border-radius: 999px;
+  transition: background-color 300ms ease;
+}
+
+.craft-recommend {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+  background: var(--craft-bg);
+  box-shadow: var(--shadow-border);
+}
+
+.craft-recommend__body {
+  padding: 14px 16px 16px;
+}
+
+.craft-recommend__prompt {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--craft-fg);
+}
+
+.craft-recommend__copy {
+  margin: 6px 0 0;
+  min-height: 3em;
+  font-size: 13px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--craft-fg) 72%, transparent);
+  animation: craft-recommend-in 180ms ease-out both;
+}
+
+@keyframes craft-recommend-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.craft-recommend__drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 300ms var(--spring),
+    opacity 300ms var(--spring);
+}
+
+.craft-recommend__drawer[data-open='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.craft-recommend__drawer-clip {
+  overflow: hidden;
+}
+
+.craft-recommend__drawer-inner {
+  padding: 8px;
+  background: var(--craft-surface);
+  border-top: 1px solid var(--craft-border);
+}
+
+.craft-recommend__drawer-label {
+  margin: 0;
+  padding: 2px 6px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--craft-muted);
+}
+
+.craft-recommend__choice {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+}
+
+.craft-recommend__choice:hover {
+  background: color-mix(in srgb, var(--craft-fg) 4%, transparent);
+}
+
+.craft-recommend__choice-short {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--craft-fg);
+}
+
+.craft-recommend__choice-meta {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--craft-muted);
+}
+
+.craft-recommend__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px 8px 16px;
+  background: var(--craft-surface);
+  border-top: 1px solid var(--craft-border);
+}
+
+.craft-recommend__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--craft-fg) 72%, transparent);
+}
+
+.craft-recommend__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-recommend__copy {
+    animation: none;
+  }
+
+  .craft-recommend__drawer {
+    transition: none;
+  }
+}
+
+.craft-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--craft-border) 80%, transparent);
+  flex-wrap: wrap;
+}
+
+.craft-sound {
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: #fff;
+  color: var(--craft-fg);
+  box-shadow: var(--shadow-border);
+  cursor: pointer;
+  transition-property: box-shadow, background-color, scale;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.craft-sound:hover {
+  box-shadow: var(--shadow-border-hover);
+}
+
+.craft-sound[aria-pressed='true'] {
+  background: var(--craft-surface);
+  color: var(--craft-muted);
+}
+
+.craft-sound:active {
+  scale: 0.96;
+}
+
+.craft-sound:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.craft-sound__swap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.craft-sound__icon {
+  display: grid;
+  place-items: center;
+  grid-area: 1 / 1;
+}
+
+.craft-sound__glyph {
+  display: block;
+  margin-inline-start: 1px;
+}
+
+.craft-split {
+  --split-open: 0;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.craft-split[data-open='true'] {
+  --split-open: 1;
+}
+
+.craft-split__plus,
+.craft-split__sat {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: #fff;
+  color: var(--craft-fg);
+  box-shadow: var(--shadow-border);
+  cursor: pointer;
+}
+
+.craft-split__plus {
+  z-index: 2;
+  transition: rotate var(--stack-close-dur) var(--stack-close-ease);
+}
+
+.craft-split[data-open='true'] .craft-split__plus {
+  rotate: 45deg;
+  transition: rotate var(--stack-open-dur) var(--stack-open-ease);
+}
+
+.craft-split__plus:active {
+  scale: 0.96;
+}
+
+.craft-split__plus:focus-visible,
+.craft-split__sat:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.craft-split__sat {
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  opacity: var(--split-open);
+  translate: calc(var(--fx) * var(--split-open)) calc(var(--fy) * var(--split-open));
+  scale: var(--split-open);
+  transition:
+    translate var(--stack-close-dur) var(--stack-close-ease),
+    scale var(--stack-close-dur) var(--stack-close-ease),
+    opacity 150ms ease;
+}
+
+.craft-split[data-open='true'] .craft-split__sat {
+  pointer-events: auto;
+  transition:
+    translate var(--stack-open-dur) var(--stack-open-ease),
+    scale var(--stack-open-dur) var(--stack-open-ease),
+    opacity 200ms ease;
+  transition-delay: calc(var(--i) * 40ms);
+}
+
+.craft-split__sat:active {
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-split__plus,
+  .craft-split__sat {
+    transition: none;
+  }
+}
+
+.craft-hold {
+  appearance: none;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+}
+
+.craft-hold__idle,
+.craft-hold__wipe {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.craft-hold__wipe {
+  background: var(--craft-fg);
+  color: #fff;
+}
+
+.craft-hold__icon {
+  display: grid;
+  place-items: center;
+}
+
+.craft-hold:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.craft-check {
+  appearance: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--craft-muted);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.craft-check::after {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 44px;
+  height: 44px;
+  translate: -50% -50%;
+}
+
+.craft-check[aria-checked='true'] {
+  background: var(--craft-fg);
+  border-color: var(--craft-fg);
+}
+
+.craft-check__tick {
+  display: grid;
+  place-items: center;
+}
+
+.craft-check:active {
+  scale: 0.96;
+}
+
+.craft-check:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.craft-status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--craft-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.craft-status__glyph {
+  color: var(--craft-fg);
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.craft-status__mood {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-left: 8px;
+  color: var(--craft-fg);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(-4px);
+  transition:
+    opacity 180ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 180ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.craft-status:hover .craft-status__mood,
+.craft-status:focus-within .craft-status__mood {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+@media (hover: none) {
+  .craft-status__mood {
+    position: static;
+    margin-left: 0;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .craft-status__glyph--asleep rect:nth-child(3),
+  .craft-status__glyph--asleep rect:nth-child(4) {
+    animation: craft-zzz 2.4s ease-in-out infinite;
+  }
+
+  .craft-status__glyph--asleep rect:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .craft-status__glyph--morning circle {
+    transform-origin: 7px 7px;
+    animation: craft-sun 3.2s ease-in-out infinite;
+  }
+
+  .craft-status__glyph--working rect:nth-child(2) {
+    animation: craft-screen 2.8s ease-in-out infinite;
+  }
+
+  .craft-status__glyph--evening path {
+    animation: craft-moon 4s ease-in-out infinite;
+  }
+}
+
+@keyframes craft-zzz {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes craft-sun {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes craft-screen {
+  0%,
+  86%,
+  100% {
+    opacity: 1;
+  }
+  90%,
+  94% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes craft-moon {
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.craft-footer__mail {
+  font-size: 0.85rem;
+  color: var(--craft-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.craft-footer__mail:hover {
+  color: var(--craft-fg);
+  border-bottom-color: color-mix(in srgb, var(--craft-fg) 25%, transparent);
+}
+
+@media (max-width: 640px) {
+  .craft-shell {
+    width: min(100% - 32px, 720px);
+    padding: 52px 0 44px;
+  }
+
+  .craft-name {
+    font-size: 1.4rem;
+  }
+
+  .craft-sound::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
+  .craft-experience__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .craft-fan {
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 36px 24px 72px 12px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .craft-fan::-webkit-scrollbar {
+    display: none;
+    height: 0;
+  }
+
+  .craft-fan__item {
+    width: 118px;
+    margin-inline-start: -18px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+  }
+
+  .craft-row {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+}
+
+@property --archive-open {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Mini Archive — frosted folder, image tiles on the face, photos draw out */
+.craft-archive {
+  --archive-open: 0;
+  --archive-in-dur: 850ms;
+  --archive-in-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --archive-out-dur: 600ms;
+  --archive-out-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --archive-w: 168px;
+  --archive-h: 224px;
+  --archive-color: #f0d56a;
+
+  position: relative;
+  width: min(100%, 620px);
+  height: 300px;
+  perspective: 1200px;
+  outline: none;
+  cursor: pointer;
+}
+
+.craft-archive:hover,
+.craft-archive:focus-visible {
+  --archive-open: 1;
+}
+
+.craft-archive:focus-visible .craft-archive__face {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 4px;
+}
+
+.craft-archive__scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 28% 70%;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(3deg + 2deg * var(--archive-open)))
+    rotateY(calc(-8deg - 4deg * var(--archive-open))) translateY(calc(-2px * var(--archive-open)));
+  transition: transform var(--archive-out-dur) var(--archive-out-ease);
+}
+
+.craft-archive:hover .craft-archive__scene,
+.craft-archive:focus-visible .craft-archive__scene {
+  transition: transform var(--archive-in-dur) var(--archive-in-ease);
+}
+
+.craft-archive__pocket {
+  position: absolute;
+  left: 0;
+  bottom: 18px;
+  width: var(--archive-w);
+  height: var(--archive-h);
+  border-radius: 16px;
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+
+.craft-archive__back {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--archive-color) 82%, #7a5a18);
+  translate: 7px 3px;
+  box-shadow:
+    0 18px 40px rgba(70, 48, 8, 0.14),
+    0 4px 10px rgba(70, 48, 8, 0.08);
+}
+
+.craft-archive__item {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  z-index: 1;
+  width: 118px;
+  transform-origin: 8% 88%;
+  translate: calc(var(--x0) + (var(--x1) - var(--x0)) * var(--archive-open))
+    calc(var(--y0) + (var(--y1) - var(--y0)) * var(--archive-open));
+  rotate: calc(var(--r0) + (var(--r1) - var(--r0)) * var(--archive-open));
+  filter: drop-shadow(0 10px 16px rgba(40, 28, 8, 0.16));
+  transition:
+    translate var(--stack-close-dur) var(--stack-close-ease),
+    rotate var(--stack-close-dur) var(--stack-close-ease);
+  transition-delay: 0s;
+  pointer-events: none;
+}
+
+.craft-archive:hover .craft-archive__item,
+.craft-archive:focus-visible .craft-archive__item {
+  transition:
+    translate var(--stack-open-dur) var(--stack-open-ease),
+    rotate var(--stack-open-dur) var(--stack-open-ease);
+  transition-delay: calc(var(--i) * 40ms);
+}
+
+.craft-archive__sleeve {
+  display: block;
+  width: 118px;
+  margin: 0;
+  padding: 8px 8px 18px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.04),
+    0 10px 28px rgba(17, 17, 17, 0.06),
+    0 28px 56px rgba(17, 17, 17, 0.05);
+}
+
+.craft-archive__sleeve img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4.2;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.craft-archive__face {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 22px 20px 20px;
+  border-radius: inherit;
+  overflow: hidden;
+  color: #3a3214;
+  transform-origin: 0% 50%;
+  transform: rotateY(calc(-16deg * var(--archive-open)));
+  transition: transform var(--archive-out-dur) var(--archive-out-ease);
+}
+
+.craft-archive:hover .craft-archive__face,
+.craft-archive:focus-visible .craft-archive__face {
+  transition: transform var(--archive-in-dur) var(--archive-in-ease);
+}
+
+.craft-archive__print {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.craft-archive__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--archive-color) 28%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    inset 0 -1px 0 color-mix(in srgb, var(--archive-color) 30%, rgba(80, 50, 10, 0.14));
+}
+
+.craft-archive__glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+}
+
+.craft-archive__sticker {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+  width: max-content;
+  max-width: 82%;
+  padding: 7px 10px 9px;
+  background: #fbfbfa;
+  rotate: -1.6deg;
+  clip-path: polygon(
+    0.6% 4%,
+    7% 0.8%,
+    16% 2.4%,
+    24% 0.3%,
+    33% 1.9%,
+    42% 0.2%,
+    53% 2.1%,
+    62% 0.4%,
+    72% 1.7%,
+    81% 0.2%,
+    90% 2.2%,
+    97% 0.6%,
+    100% 3%,
+    98.8% 14%,
+    100% 27%,
+    98.4% 41%,
+    100% 55%,
+    98.6% 68%,
+    100% 82%,
+    98.7% 93%,
+    100% 100%,
+    91% 98.2%,
+    81% 100%,
+    70% 98.1%,
+    59% 99.7%,
+    48% 97.9%,
+    37% 100%,
+    26% 98.3%,
+    15% 99.8%,
+    6% 97.4%,
+    0% 99.2%,
+    1.6% 86%,
+    0% 73%,
+    1.8% 59%,
+    0.2% 45%,
+    1.5% 32%,
+    0% 18%,
+    1.4% 8%
+  );
+  filter:
+    drop-shadow(0 0 0.6px rgba(17, 17, 17, 0.12))
+    drop-shadow(0 1px 1px rgba(17, 17, 17, 0.05))
+    drop-shadow(0 4px 10px rgba(17, 17, 17, 0.07));
+}
+
+.craft-archive__title {
+  margin: 0;
+  font-family: var(--font-sf-rounded), var(--font-sf-text), 'Hiragino Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: var(--craft-fg);
+}
+
+.craft-archive__caption {
+  margin: 7px 0 0;
+  padding: 5px 0 0;
+  border-top: 1px solid var(--craft-border);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: var(--craft-muted);
+}
+
+.craft-archive__sticker::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 6px;
+  background: var(--craft-border);
+}
+
+.craft-archive:active .craft-archive__pocket {
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-archive__scene,
+  .craft-archive__face,
+  .craft-archive__item,
+  .craft-archive:hover .craft-archive__scene,
+  .craft-archive:hover .craft-archive__face,
+  .craft-archive:hover .craft-archive__item,
+  .craft-archive:focus-visible .craft-archive__scene,
+  .craft-archive:focus-visible .craft-archive__face,
+  .craft-archive:focus-visible .craft-archive__item {
+    transition: none;
+    transition-delay: 0s;
+  }
+
+  .craft-archive:active .craft-archive__pocket {
+    scale: 1;
+  }
+}
+
+/* Photo Book — hardcover on the desk. Click opens the cover; prints develop, then lift out on click.
+   Pages turn from the right page's dog-ear (or its paper); the left page turns back. */
+.craft-book {
+  --book-open: 0;
+  /* page edge: the size prop, clamped so a spread fits a phone (50vw - 52px ≈ 136px at 375px) */
+  --book-w: min(var(--book-size, 240px), 50vw - 52px);
+  --book-h: min(var(--book-size, 240px), 50vw - 52px);
+  --book-color: #ddd6c6;
+  --book-ink: color-mix(in srgb, var(--book-color) 78%, #4a3c22);
+  --book-ribbon: color-mix(in srgb, var(--book-color) 35%, #6b4a26);
+  --book-in-dur: 820ms;
+  --book-in-ease: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --book-out-dur: 620ms;
+  --book-out-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --book-turn-dur: 1150ms;
+  --book-turn-ease: cubic-bezier(0.5, 0.04, 0.22, 1);
+  --book-track-dur: 140ms;
+  /* pointer position over the book, 0..1; 0.5 0.5 is the rest pose */
+  --book-nx: 0.5;
+  --book-ny: 0.5;
+  --book-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+
+  position: relative;
+  width: calc(var(--book-w) * 2 + 16px);
+  height: calc(var(--book-h) + 16px);
+  perspective: 1400px;
+}
+
+.craft-book[data-open='true'] {
+  --book-open: 1;
+}
+
+.craft-book__scene {
+  position: absolute;
+  inset: 8px;
+  /* ponytail: flat, not preserve-3d. Chrome hit-tests nested 3D layers wrong under a tilted
+     preserve-3d scene (clicks on the right page land on the paper). Perspective here keeps the
+     flips; z-index does the stacking. */
+  transform-style: flat;
+  perspective: 1400px;
+  transform-origin: 75% 55%;
+  transform: translateX(calc(var(--book-w) * -0.5 * (1 - var(--book-open))))
+    rotateX(calc(5deg + 3deg * var(--book-open) + (10deg - 6deg * var(--book-open)) * (0.5 - var(--book-ny))))
+    rotateY(calc(-14deg * (1 - var(--book-open)) - (8deg - 4deg * var(--book-open)) * (var(--book-nx) - 0.5) + var(--book-spin, 0deg)));
+  transition:
+    transform var(--book-out-dur) var(--book-out-ease),
+    translate 320ms var(--avatar-ease-in),
+    scale 160ms var(--avatar-ease-in);
+}
+
+.craft-book[data-open='true'] .craft-book__scene {
+  transition:
+    transform var(--book-in-dur) var(--book-in-ease),
+    translate 320ms var(--avatar-ease-in),
+    scale 160ms var(--avatar-ease-in);
+}
+
+/* while the pointer is over the book, the lean follows it quickly; leaving eases back on the slow clock */
+.craft-book[data-hot='true'] .craft-book__scene {
+  transition:
+    transform var(--book-track-dur) ease-out,
+    translate 320ms var(--avatar-ease-in),
+    scale 160ms var(--avatar-ease-in);
+}
+
+/* a full turn about the spine: symmetric ease-in-out so the midpoint is exactly the back */
+.craft-book[data-spinning='true'] .craft-book__scene {
+  transition:
+    transform 1600ms cubic-bezier(0.65, 0, 0.35, 1),
+    translate 320ms var(--avatar-ease-in),
+    scale 160ms var(--avatar-ease-in);
+}
+
+/* scripted demo: the recording cursor must not lean, hover, or click anything */
+.craft-book[data-demo] {
+  pointer-events: none;
+}
+
+.craft-book[data-open='false']:has(.craft-book__front:active) .craft-book__scene {
+  scale: 0.96;
+}
+
+/* page block: back board, ribbon, page edges, then the sheets */
+.craft-book__block {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--book-w);
+  height: var(--book-h);
+}
+
+.craft-book__backboard {
+  position: absolute;
+  inset: -4px -6px -6px -4px;
+  border-radius: 3px 10px 10px 3px;
+  background-color: var(--book-color);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 24px rgba(40, 30, 10, 0.14);
+}
+
+.craft-book__board {
+  position: absolute;
+  inset: -4px -6px -6px -4px;
+  border-radius: 3px 10px 10px 3px;
+  background: var(--book-ink);
+  box-shadow:
+    1px 1px 0 #ececec,
+    2px 2px 0 #f8f8f8,
+    3px 3px 0 #e6e6e6,
+    4px 4px 0 var(--book-ink),
+    0 22px 44px rgba(40, 30, 10, 0.16),
+    0 4px 10px rgba(40, 30, 10, 0.08);
+}
+
+.craft-book__ribbon {
+  position: absolute;
+  left: 26px;
+  bottom: -22px;
+  width: 7px;
+  height: 44px;
+  background: var(--book-ribbon);
+  rotate: 2deg;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+  filter: drop-shadow(0 2px 2px rgba(40, 30, 10, 0.18));
+}
+
+.craft-book__leaves {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 5px 5px 2px;
+  background: #fff;
+  box-shadow:
+    1px 1px 0 #e4e4e4,
+    2px 2px 0 #fff,
+    3px 3px 0 #e4e4e4,
+    4px 4px 0 #fff,
+    5px 5px 0 #dcdcdc;
+}
+
+/* binder rings, one every 36px down the spine. Seen from above a standing ring is a low arch:
+   its top catches the light, its feet go into punched holes, and its lower half is inside the
+   binding, so only the top of each ring is drawn. Pages and the cover swing through them. */
+.craft-book__rings,
+.craft-book__holes {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 20px;
+  height: calc(var(--book-h) - 12px);
+  translate: -10px 0;
+  pointer-events: none;
+  background-size: 20px 36px;
+  background-repeat: repeat-y;
+}
+
+.craft-book__holes {
+  z-index: 109;
+  background-image:
+    radial-gradient(ellipse 2.6px 1.7px at 2.6px 19px, #5c5346 0 62%, transparent 100%),
+    radial-gradient(ellipse 2.6px 1.7px at 17.4px 19px, #5c5346 0 62%, transparent 100%);
+}
+
+.craft-book__rings {
+  z-index: 110;
+  /* vertical metal shading across the ring's band (rows 13 to 22 of each 36px tile) */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #fafafa 0 13px,
+    #e4e4e4 15px,
+    #9c9c9c 18px,
+    #5a5a5a 21px,
+    #454545 22px 36px
+  );
+  -webkit-mask-image:
+    radial-gradient(ellipse 9.4px 5px at 10px 18px, transparent 0 58%, #000 62% 97%, transparent 100%),
+    repeating-linear-gradient(to bottom, #000 0 19.4px, transparent 19.4px 36px);
+  -webkit-mask-size: 20px 36px, 20px 36px;
+  -webkit-mask-repeat: repeat-y, repeat-y;
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 9.4px 5px at 10px 18px, transparent 0 58%, #000 62% 97%, transparent 100%),
+    repeating-linear-gradient(to bottom, #000 0 19.4px, transparent 19.4px 36px);
+  mask-size: 20px 36px, 20px 36px;
+  mask-repeat: repeat-y, repeat-y;
+  mask-composite: intersect;
+  filter: drop-shadow(0 1.5px 1px rgba(0, 0, 0, 0.3));
+}
+
+/* --turned runs 0 → 1 over a turn (interruptible: a reversal retargets the same transition) */
+@property --turned {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* resting sheets sit flat on one side or the other; while one is in flight it hides behind the curl */
+.craft-book__sheet {
+  --turned: 0;
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--turned) * -180deg));
+}
+
+.craft-book__sheet[data-turned='true'] {
+  --turned: 1;
+}
+
+.craft-book__sheet[data-flying] {
+  visibility: hidden;
+}
+
+/* the sheet in flight, as three nested segments hinged to each other. The tip follows the turn
+   linearly while the spine end lags behind it and the joints bend, so the page peels from its free
+   edge and flattens out as it lands. The top edge also lags the bottom corner (rotateX). */
+.craft-book__curl {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--turned) * -180deg + sin(var(--turned) * 180deg) * 46deg))
+    rotateX(calc(sin(var(--turned) * 180deg) * 12deg));
+  transition: --turned var(--book-turn-dur) var(--book-turn-ease);
+  pointer-events: none;
+}
+
+.craft-book__seg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 33.3334%;
+  height: 100%;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+}
+
+.craft-book__seg--1,
+.craft-book__seg--2 {
+  left: 100%;
+  width: 100%;
+  transform: rotateY(calc(sin(var(--turned) * 180deg) * -23deg));
+}
+
+.craft-book__seg > .craft-book__face {
+  overflow: hidden;
+}
+
+/* the first two segments run 1.5px past their joint so the seam never shows through */
+.craft-book__seg--0 > .craft-book__face,
+.craft-book__seg--1 > .craft-book__face {
+  right: -1.5px;
+}
+
+/* no per-segment shading on the curl: it is drawn once across the whole page below */
+.craft-book__curl .craft-book__face::after {
+  content: none;
+}
+
+/* curl shading laid across the full page, so it is continuous over the joints: the front darkens
+   toward its lifting edge, the back toward the spine */
+.craft-book__curl .craft-book__page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: calc(sin(var(--turned) * 180deg));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.16));
+}
+
+.craft-book__curl .craft-book__face--back .craft-book__page::before {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.12));
+}
+
+/* each segment shows its third of the page: the page is laid out at full width and offset */
+.craft-book__seg > .craft-book__face > .craft-book__page {
+  right: auto;
+  width: 300%;
+  left: calc(var(--seg) * -100%);
+}
+
+.craft-book__seg > .craft-book__face--back > .craft-book__page {
+  left: calc((2 - var(--seg)) * -100%);
+}
+
+.craft-book__seg--0 > .craft-book__face--front > .craft-book__page {
+  border-radius: 2px 0 0 2px;
+}
+
+.craft-book__seg--2 > .craft-book__face--front > .craft-book__page {
+  border-radius: 0 5px 5px 0;
+}
+
+/* the corner lifts first: the turning page's dog-ear is up for the whole flight */
+.craft-book__curl .craft-book__face--front .craft-book__turn::before,
+.craft-book__curl .craft-book__face--front .craft-book__turn::after {
+  transform: scale(2.4);
+}
+
+/* curl shading on the moving sheet: the front darkens toward its lifting edge, the back catches light */
+.craft-book__face::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(sin(var(--turned) * 180deg));
+}
+
+.craft-book__face--front::after {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.16));
+}
+
+.craft-book__face--back::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.12));
+}
+
+.craft-book__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.craft-book__face--back {
+  transform: rotateY(180deg);
+}
+
+.craft-book__page {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  padding: 14px 14px 30px;
+  background: #fff;
+}
+
+/* paper grain */
+.craft-book__page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: var(--book-grain);
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+.craft-book__page--right {
+  border-radius: 2px 5px 5px 2px; /* board corner 10px minus the 5px it sits inside */
+  box-shadow: inset 14px 0 16px -14px rgba(0, 0, 0, 0.16);
+}
+
+.craft-book__page--left {
+  border-radius: 4px 2px 2px 4px; /* cover corner 10px minus the 6px it sits inside */
+  box-shadow: inset -14px 0 16px -14px rgba(0, 0, 0, 0.14);
+}
+
+.craft-book__folio {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--craft-muted);
+  pointer-events: none;
+}
+
+/* dog-ear: the button is a fixed 40px hit box hung off the corner, kept inside the page's bottom
+   band so it never overlaps a print. The fold is drawn by the two pseudo-elements and grows on
+   hover with a transform, so hovering never grows the hit box. */
+.craft-book__turn {
+  appearance: none;
+  position: absolute;
+  bottom: -10px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: scale 150ms ease-out;
+}
+
+.craft-book__turn:active {
+  scale: 0.96;
+}
+
+.craft-book__turn::before,
+.craft-book__turn::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  width: 26px;
+  height: 26px;
+  /* pseudo-elements hit-test; the grown flap must not reach a print */
+  pointer-events: none;
+  transition: transform 220ms var(--avatar-ease-in);
+}
+
+.craft-book__turn--next {
+  right: -10px;
+  transform-origin: 100% 100%;
+}
+
+.craft-book__turn--next::before,
+.craft-book__turn--next::after {
+  right: 10px;
+  border-radius: 0 0 5px 0;
+  transform-origin: 100% 100%;
+}
+
+/* what shows under the lifted corner */
+.craft-book__turn--next::before {
+  background: linear-gradient(to top left, #e9e9e9 0 50%, transparent 50%);
+}
+
+/* the folded flap */
+.craft-book__turn--next::after {
+  background: linear-gradient(to bottom right, #fff 0 36%, #ececec 50%, transparent 50%);
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.14));
+}
+
+.craft-book__turn--prev {
+  left: -10px;
+  transform-origin: 0 100%;
+}
+
+.craft-book__turn--prev::before,
+.craft-book__turn--prev::after {
+  left: 10px;
+  border-radius: 0 0 0 4px;
+  transform-origin: 0 100%;
+}
+
+.craft-book__turn--prev::before {
+  background: linear-gradient(to top right, #e9e9e9 0 50%, transparent 50%);
+}
+
+.craft-book__turn--prev::after {
+  background: linear-gradient(to bottom left, #fff 0 36%, #ececec 50%, transparent 50%);
+  filter: drop-shadow(-1px 1px 1px rgba(0, 0, 0, 0.14));
+}
+
+.craft-book__turn:focus-visible {
+  outline: none;
+}
+
+.craft-book__turn:focus-visible::after {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 2px;
+}
+
+/* cover: hinged at the spine, two faces */
+.craft-book__cover {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: calc(var(--book-w) + 6px);
+  height: calc(var(--book-h) + 10px);
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(-180deg * var(--book-open)));
+  transition: transform var(--book-out-dur) var(--book-out-ease);
+}
+
+.craft-book[data-open='true'] .craft-book__cover {
+  transition: transform var(--book-in-dur) var(--book-in-ease);
+}
+
+.craft-book__cover:has(> .craft-book__front:focus-visible) {
+  border-radius: 10px;
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 5px;
+}
+
+.craft-book__front,
+.craft-book__back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.craft-book__front {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 18px 18px 18px 24px;
+  border: 0;
+  border-radius: 3px 10px 10px 3px;
+  background-color: var(--book-color);
+  /* light from the top left, then the linen weave */
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 48%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px);
+  color: var(--craft-fg);
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset -1px 0 0 rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(40, 30, 10, 0.1),
+    0 10px 24px rgba(40, 30, 10, 0.14);
+}
+
+/* blind-stamped frame, concentric with the 10px board corners */
+.craft-book__front::before {
+  content: '';
+  position: absolute;
+  inset: 5px 5px 5px 15px;
+  border-radius: 5px;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+/* spine crease */
+.craft-book__front::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 11px;
+  width: 1px;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.28);
+}
+
+.craft-book[data-open='true'] .craft-book__front {
+  pointer-events: none;
+}
+
+.craft-book__cover-print {
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 5px); /* optical center: the spine crease eats the left edge */
+  width: 54%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  object-fit: cover;
+  outline: var(--image-outline);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 -1px 0 rgba(0, 0, 0, 0.12);
+  filter: grayscale(1) contrast(1.04);
+  transition: filter var(--stack-scale-dur) var(--stack-scale-ease);
+  pointer-events: none;
+}
+
+.craft-book__sticker > span {
+  display: block;
+}
+
+.craft-book__back {
+  border-radius: 10px 3px 3px 10px;
+  background: var(--book-color);
+  transform: rotateY(180deg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 1px 2px rgba(40, 30, 10, 0.1),
+    0 12px 28px rgba(40, 30, 10, 0.14);
+}
+
+.craft-book__back .craft-book__page {
+  inset: 4px 0 6px 6px;
+  box-shadow:
+    inset -14px 0 16px -14px rgba(0, 0, 0, 0.14),
+    -1px 1px 0 #e4e4e4,
+    -2px 2px 0 #fff,
+    -3px 3px 0 #e0e0e0;
+}
+
+.craft-book__tile {
+  appearance: none;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: var(--craft-surface);
+  outline: var(--image-outline);
+  outline-offset: -1px;
+  cursor: zoom-in;
+  rotate: calc(var(--tilt, 0) * 1deg);
+  transition:
+    translate 350ms var(--spring),
+    scale 350ms var(--spring),
+    box-shadow 220ms ease;
+}
+
+.craft-book__tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);
+  transition: filter var(--stack-scale-dur) var(--stack-scale-ease);
+}
+
+/* transparent tape across two corners, torn ends. It stays on the page when the print lifts out. */
+.craft-book__tile::before,
+.craft-book__tile::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 12px;
+  rotate: -45deg;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 243, 205, 0.55),
+    rgba(255, 246, 214, 0.72) 45%,
+    rgba(255, 246, 214, 0.72) 55%,
+    rgba(255, 243, 205, 0.55)
+  );
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(120, 100, 50, 0.12),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5);
+  clip-path: polygon(0 0, 100% 0, 98% 25%, 100% 55%, 97% 100%, 0 100%, 3% 70%, 0 35%);
+}
+
+.craft-book__tile::before {
+  top: 0;
+  left: -12px;
+}
+
+.craft-book__tile::after {
+  right: -12px;
+  bottom: 0;
+}
+
+/* prints develop one after another as the cover clears */
+.craft-book[data-open='true'] .craft-book__tile img {
+  filter: grayscale(0) contrast(1);
+  transition-delay: calc(240ms + var(--i, 0) * 70ms);
+}
+
+.craft-book[data-open='true'] .craft-book__cover-print {
+  filter: grayscale(0) contrast(1);
+  transition-delay: 240ms;
+}
+
+.craft-book__tile[data-lifted] img {
+  visibility: hidden;
+}
+
+.craft-book__tile[data-hover] {
+  translate: 0 -4px;
+  scale: 1.01;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+}
+
+.craft-book__tile:active {
+  scale: 0.96;
+}
+
+.craft-book__tile:focus-visible,
+.craft-book__print:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--craft-fg) 35%, transparent);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .craft-book[data-open='false']:hover .craft-book__scene {
+    translate: 0 -3px;
+  }
+
+  .craft-book[data-open='false']:hover .craft-book__cover-print {
+    filter: grayscale(0) contrast(1);
+  }
+
+  .craft-book__tile:hover {
+    translate: 0 -4px;
+    scale: 1.01;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+  }
+
+  .craft-book__turn:hover::before,
+  .craft-book__turn:hover::after {
+    transform: scale(1.3);
+  }
+}
+
+/* lifted print: portaled to body so the 3D scene cannot clip or skew it */
+.craft-book__lift {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.craft-book__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.craft-book__print {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--craft-surface);
+  outline: var(--image-outline);
+  outline-offset: -1px;
+  cursor: zoom-out;
+}
+
+.craft-book__print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.craft-book__lift-caption {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-family: var(--font-sf-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-wrap: pretty;
+  color: var(--craft-muted);
+  pointer-events: none;
+}
+
+@media (max-width: 560px) {
+  .craft-book__page {
+    gap: 5px;
+    padding: 9px 9px 22px;
+  }
+
+  .craft-book__folio {
+    bottom: 6px;
+    font-size: 0.5rem;
+  }
+
+  .craft-book__tile::before,
+  .craft-book__tile::after {
+    width: 26px;
+    height: 8px;
+  }
+
+  .craft-book__tile::before {
+    left: -8px;
+  }
+
+  .craft-book__tile::after {
+    right: -8px;
+  }
+
+  /* 44px touch target; 22px of it is the page's bottom band, the rest hangs off the edge */
+  .craft-book__turn {
+    bottom: -22px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .craft-book__turn::before,
+  .craft-book__turn::after {
+    bottom: 22px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .craft-book__turn--next {
+    right: -22px;
+  }
+
+  .craft-book__turn--next::before,
+  .craft-book__turn--next::after {
+    right: 22px;
+  }
+
+  .craft-book__turn--prev {
+    left: -22px;
+  }
+
+  .craft-book__turn--prev::before,
+  .craft-book__turn--prev::after {
+    left: 22px;
+  }
+
+  .craft-book__front {
+    padding: 12px 12px 12px 18px;
+  }
+
+  .craft-book__cover-print {
+    top: 12px;
+    width: 44%;
+  }
+
+  /* the kind label is noise on a 136px cover */
+  .craft-book__sticker .craft-archive__caption {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-book__scene,
+  .craft-book__cover,
+  .craft-book__sheet,
+  .craft-book__curl,
+  .craft-book__tile,
+  .craft-book__tile img,
+  .craft-book__turn,
+  .craft-book__cover-print,
+  .craft-book[data-open='true'] .craft-book__scene,
+  .craft-book[data-open='true'] .craft-book__cover,
+  .craft-book[data-open='true'] .craft-book__tile img,
+  .craft-book[data-open='true'] .craft-book__cover-print {
+    transition: none;
+    transition-delay: 0s;
+  }
+}

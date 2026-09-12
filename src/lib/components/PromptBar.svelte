@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Split from "$lib/craft/Split.svelte";
+
   let {
     value = $bindable(""),
     disabled = false,
@@ -17,9 +19,11 @@
       onrefine();
     }
   }
+
+  const empty = $derived(!value.trim() || disabled);
 </script>
 
-<div class="bar">
+<div class="craft-cta">
   <textarea
     rows="3"
     placeholder="dump a messy idea. refine splits it into checkable tasks."
@@ -30,28 +34,40 @@
   <div class="row">
     <span class="hint">⌘↩ refine</span>
     <div class="actions">
-      <button class="ghost" type="button" onclick={oncapture} disabled={disabled || !value.trim()}>
+      <button
+        class="craft-btn craft-btn--ghost"
+        type="button"
+        onclick={oncapture}
+        disabled={empty}
+      >
         capture
       </button>
-      <button class="primary" type="button" onclick={onrefine} disabled={disabled || !value.trim()}>
+      <button
+        class="craft-btn craft-btn--primary"
+        type="button"
+        onclick={onrefine}
+        disabled={empty}
+      >
         refine
       </button>
+      <Split
+        label="compose"
+        items={[
+          { id: "capture", label: "capture", mark: "c", onSelect: empty ? undefined : oncapture },
+          { id: "refine", label: "refine", mark: "r", onSelect: empty ? undefined : onrefine },
+        ]}
+      />
     </div>
   </div>
 </div>
 
 <style>
-  .bar {
-    background: var(--craft-surface);
-    border-radius: 18px;
-    padding: 12px 12px 10px;
-  }
   textarea {
     width: 100%;
     resize: none;
     border: none;
     background: transparent;
-    padding: 4px 6px;
+    padding: 0 0 12px;
     min-height: 72px;
     line-height: 1.5;
     font-size: 1.02rem;
@@ -64,16 +80,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 4px 2px;
+    gap: 12px;
   }
   .hint {
     font-family: var(--font-sf-mono);
     font-size: 11px;
-    color: var(--muted);
+    color: var(--craft-muted);
     font-variant-numeric: tabular-nums;
   }
   .actions {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
+  }
+  .craft-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
   }
 </style>

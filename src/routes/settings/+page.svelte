@@ -63,7 +63,7 @@
           bind:value={form.defaultRepoPath}
           placeholder="/Users/you/src/the-repo"
         />
-        <button class="ghost" type="button" onclick={() => void browse()}>browse</button>
+        <button class="craft-btn craft-btn--ghost" type="button" onclick={() => void browse()}>browse</button>
       </div>
     </label>
 
@@ -122,7 +122,7 @@
     </label>
 
     <div class="toolbar">
-      <button class="primary" type="submit">save</button>
+      <button class="craft-btn craft-btn--primary" type="submit">save</button>
       {#if saved}<span class="help">saved to local sqlite.</span>{/if}
     </div>
   </form>
